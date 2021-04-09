@@ -12,4 +12,6 @@ public class DailyEntry
     public string AdditionalResourcesLinks { get; set; }
     public string AdditionalNotes { get; set; }
     public int RecapQuizScore { get; set;}
+    public string Token { get; set; }
+
 }

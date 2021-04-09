@@ -31,12 +31,19 @@ namespace server
             services.AddTransient<ISoCLessonsTrackerDatabaseSettings>(provider =>
                 provider.GetRequiredService<IOptions<SoCLessonsTrackerDatabaseSettings>>().Value);
             
-            services.AddTransient<DailyEntryService>(); //addtransient cs addscoped vs addsingleton?
-            // services.AddScoped<DailyEntryService>();
+            services.AddTransient<DailyEntryService>(); //addtransient Vs addscoped vs addsingleton?
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "server", Version = "v1" });
+            });
+
+            services.AddCors(options => 
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
             });
         }
 
@@ -49,6 +56,8 @@ namespace server
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "server v1"));
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
 
