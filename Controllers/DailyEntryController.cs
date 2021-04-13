@@ -15,12 +15,62 @@ using Microsoft.Extensions.Logging;
             _dailyEntryService = service;
         }
 
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll()
+        // {
+        //     var entries = await _dailyEntryService.GetAllAsync();
+        //     return Ok(entries);
+        // }
+
+        //working
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll([FromQuery] string token)
+        // {
+        //     if(!String.IsNullOrEmpty(token)){
+        //         var entries = await _dailyEntryService.GetAllByUserAsync(token);
+        //         return Ok(entries);
+
+        //     } else {
+        //         var entries = await _dailyEntryService.GetAllAsync();
+        //         return Ok(entries);
+
+        //     }
+        // }
+
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll()
+        public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll([FromQuery] string token, [FromQuery] string date, [FromQuery] string search)
         {
-            var entries = await _dailyEntryService.GetAllAsync();
-            return Ok(entries);
+            if (!String.IsNullOrEmpty(token) && !String.IsNullOrEmpty(date) && String.IsNullOrEmpty(search)){
+                
+                var entries = await _dailyEntryService.GetByDateAndUserAsync(token, date);  //this works
+                return Ok(entries);
+
+            } else if (!String.IsNullOrEmpty(token) && String.IsNullOrEmpty(date) && !String.IsNullOrEmpty(search)) {
+                
+                var entries = await _dailyEntryService.GetBySearchAndUserAsync(token, search);      //!!! sort of working - search by full words
+                return Ok(entries);
+            
+            } else if ((!String.IsNullOrEmpty(token) && String.IsNullOrEmpty(date) && String.IsNullOrEmpty(search))){
+                
+                var entries = await _dailyEntryService.GetAllByUserAsync(token);        //this works
+                return Ok(entries);
+            
+            } else {
+                var entries = await _dailyEntryService.GetAllAsync();       //this works
+                return Ok(entries);
+            }
+
+            // db.users.find({"name": /.*m.*/})
+            //     db.articles.find(
+            //     { $text: { $search: "coffee" } }
+            // ).sort( { score: { $meta: "textScore" } } )
+            
         }
+        
+
+
+
 
         [HttpGet("{id}")]
 
@@ -33,6 +83,7 @@ using Microsoft.Extensions.Logging;
             }
             return Ok(entry);
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(DailyEntry dailyEntry)
         {

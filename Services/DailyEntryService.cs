@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 public class DailyEntryService
 {
     private readonly IMongoCollection<DailyEntry> _dailyEntries;
@@ -19,9 +20,38 @@ public class DailyEntryService
         return await _dailyEntries.Find(entry => true).ToListAsync();
     }
 
+    public async Task<List<DailyEntry>> GetAllByUserAsync(string token)
+    {
+        return await _dailyEntries.Find(entry => entry.Token == token).ToListAsync();
+    }
+
+
     public async Task<DailyEntry> GetByIdAsync(string id)
     {
         return await _dailyEntries.Find<DailyEntry>(entry => entry.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<List<DailyEntry>> GetByDateAndUserAsync(string token, string date)
+    {
+        return await _dailyEntries.Find<DailyEntry>(entry => entry.Date == date && entry.Token == token).ToListAsync();
+    }
+
+    public async Task<List<DailyEntry>> GetBySearchAndUserAsync(string token, string search)  //!!! to sort out
+    {
+
+        // var F = Builders<DailyEntry>.Filter.Text($"{search}");
+        // var P = Builders<DailyEntry>.Projection.MetaTextScore("TextMatchScore");
+        // var S = Builders<DailyEntry>.Sort.MetaTextScore("TextMatchScore");
+        //return await _dailyEntries.Find(F).Sort(S).ToListAsync();
+
+        var filter = Builders<DailyEntry>.Filter;
+        var searchFilter = filter.Text($"{search}");
+        var tokenFilter = filter.Eq(entry => entry.Token, token);
+        var finalFilter = filter.And(tokenFilter, searchFilter);
+
+        return await _dailyEntries.Find<DailyEntry>(finalFilter).ToListAsync();  //sort of working - full words
+        
+        //return await _dailyEntries.Find<DailyEntry>(entry => entry.Token == token && entry.Topics.Contains(search)).ToListAsync();      //sort of working - full words
     }
 
     public async Task<DailyEntry> CreateAsync(DailyEntry dailyEntry)
