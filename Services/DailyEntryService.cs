@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
+using MongoDB.Driver.Linq;
+
 public class DailyEntryService
 {
     private readonly IMongoCollection<DailyEntry> _dailyEntries;
@@ -22,7 +24,8 @@ public class DailyEntryService
 
     public async Task<List<DailyEntry>> GetAllByUserAsync(string token)
     {
-        return await _dailyEntries.Find(entry => entry.Token == token).ToListAsync();
+        //return await _dailyEntries.Find(entry => entry.Token == token).SortBy(entry => entry.Date).ToListAsync();
+        return await _dailyEntries.Find(entry => entry.Token == token).Sort("{Date: 1}").ToListAsync();
     }
 
 
@@ -36,7 +39,7 @@ public class DailyEntryService
         return await _dailyEntries.Find<DailyEntry>(entry => entry.Date == date && entry.Token == token).ToListAsync();
     }
 
-    public async Task<List<DailyEntry>> GetBySearchAndUserAsync(string token, string search)  //!!! to sort out
+    public async Task<List<DailyEntry>> GetBySearchAndUserAsync(string token, string search)  //!!! to improve
     {
 
         // var F = Builders<DailyEntry>.Filter.Text($"{search}");

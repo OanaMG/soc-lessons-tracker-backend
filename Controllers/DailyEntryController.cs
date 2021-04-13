@@ -57,20 +57,10 @@ using Microsoft.Extensions.Logging;
                 return Ok(entries);
             
             } else {
-                var entries = await _dailyEntryService.GetAllAsync();       //this works
-                return Ok(entries);
+                //var entries = await _dailyEntryService.GetAllAsync();       //this works
+                return NoContent();
             }
-
-            // db.users.find({"name": /.*m.*/})
-            //     db.articles.find(
-            //     { $text: { $search: "coffee" } }
-            // ).sort( { score: { $meta: "textScore" } } )
-            
         }
-        
-
-
-
 
         [HttpGet("{id}")]
 
