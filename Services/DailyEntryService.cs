@@ -5,16 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver.Linq;
+using Microsoft.Extensions.Configuration;
 
 public class DailyEntryService
 {
     private readonly IMongoCollection<DailyEntry> _dailyEntries;
-
-    public DailyEntryService(ISoCLessonsTrackerDatabaseSettings settings)
+    IConfiguration _configuration;
+    public DailyEntryService(IConfiguration configuration)
     {
-        var client = new MongoClient(settings.ConnectionString);
-        var database = client.GetDatabase(settings.DatabaseName);
-        _dailyEntries = database.GetCollection<DailyEntry>(settings.DailyJournalEntriesCollectionName);
+        _configuration = configuration;
+        
+        var client = new MongoClient(_configuration["DBCONNECTION"]);
+        var database = client.GetDatabase(_configuration["DBNAME"]);
+        _dailyEntries = database.GetCollection<DailyEntry>(_configuration["DBCOLLECTION"]);
     }
 
     public async Task<List<DailyEntry>> GetAllAsync()

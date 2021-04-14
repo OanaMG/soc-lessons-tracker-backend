@@ -26,12 +26,8 @@ namespace server
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.Configure<SoCLessonsTrackerDatabaseSettings>(Configuration.GetSection(nameof(SoCLessonsTrackerDatabaseSettings)));
-            services.AddTransient<ISoCLessonsTrackerDatabaseSettings>(provider =>
-                provider.GetRequiredService<IOptions<SoCLessonsTrackerDatabaseSettings>>().Value);
-            
-            services.AddTransient<DailyEntryService>(); //addtransient Vs addscoped vs addsingleton?
+        {            
+            services.AddTransient<DailyEntryService>(); 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
