@@ -15,28 +15,6 @@ using Microsoft.Extensions.Logging;
             _dailyEntryService = service;
         }
 
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll()
-        // {
-        //     var entries = await _dailyEntryService.GetAllAsync();
-        //     return Ok(entries);
-        // }
-
-        //working
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll([FromQuery] string token)
-        // {
-        //     if(!String.IsNullOrEmpty(token)){
-        //         var entries = await _dailyEntryService.GetAllByUserAsync(token);
-        //         return Ok(entries);
-
-        //     } else {
-        //         var entries = await _dailyEntryService.GetAllAsync();
-        //         return Ok(entries);
-
-        //     }
-        // }
-
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll([FromQuery] string token, [FromQuery] string date, [FromQuery] string search)
