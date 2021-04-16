@@ -27,8 +27,8 @@ public class DailyEntryService
 
     public async Task<List<DailyEntry>> GetAllByUserAsync(string token)
     {
-        //return await _dailyEntries.Find(entry => entry.Token == token).SortBy(entry => entry.Date).ToListAsync();
-        return await _dailyEntries.Find(entry => entry.Token == token).Sort("{Date: 1}").ToListAsync();
+        return await _dailyEntries.Find(entry => entry.Token == token).SortBy(entry => entry.Date).ToListAsync();
+        //return await _dailyEntries.Find(entry => entry.Token == token).Sort("{Date: 1}").ToListAsync();
     }
 
 
