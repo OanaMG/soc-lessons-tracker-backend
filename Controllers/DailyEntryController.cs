@@ -21,21 +21,21 @@ using Microsoft.Extensions.Logging;
         {
             if (!String.IsNullOrEmpty(token) && !String.IsNullOrEmpty(date) && String.IsNullOrEmpty(search)){
                 
-                var entries = await _dailyEntryService.GetByDateAndUserAsync(token, date);  //this works
+                var entries = await _dailyEntryService.GetByDateAndUserAsync(token, date);
                 return Ok(entries);
 
             } else if (!String.IsNullOrEmpty(token) && String.IsNullOrEmpty(date) && !String.IsNullOrEmpty(search)) {
                 
-                var entries = await _dailyEntryService.GetBySearchAndUserAsync(token, search);      //!!! sort of working - search by full words
+                var entries = await _dailyEntryService.GetBySearchAndUserAsync(token, search);  
                 return Ok(entries);
             
             } else if ((!String.IsNullOrEmpty(token) && String.IsNullOrEmpty(date) && String.IsNullOrEmpty(search))){
                 
-                var entries = await _dailyEntryService.GetAllByUserAsync(token);        //this works
+                var entries = await _dailyEntryService.GetAllByUserAsync(token); 
                 return Ok(entries);
             
             } else {
-                //var entries = await _dailyEntryService.GetAllAsync();       //this works
+                //var entries = await _dailyEntryService.GetAllAsync();
                 return NoContent();
             }
         }
