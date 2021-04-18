@@ -1,15 +1,14 @@
-# Objective
-
-Build an application that will enable users to keep track of their learning resources while at the School of Code. 
-
-# Main Features
-
-The application should be able to: 
-  - Allow users to log in to their accounts
-  - See an overview of all their entries
-  - Be able to visually see their recap quiz progress
-  - Search entries by topic, and find out on which days that topic was covered 
-  - Add new daily entry (including file upload)
-  - View a daily entry based on the date selected (also be able to open any documents related to that entry)
-  - Edit a daily entry
-  - Delete a daily entry
+# SoCLessonsTrackerApi
+## API route & controllers
+  ### /daily-entries
+    ### Get all daily entries 
+    ### Get daily entry by entry id
+    ### Post new daily entry
+    ### Update existing daily entry
+    ### Delete existing daily entry
+    ### Get daily entries by token
+          /daily-entries?token=xxxxxx
+    ### Get daily entries by token and date
+          /daily-entries?token=xxxxxx$date=2021-06-14
+    ### Get daily entries by token and topic searched
+          /daily-entries?token=xxxxxx$search=react-router
