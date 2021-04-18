@@ -1,5 +1,5 @@
 # SoCLessonsTrackerApi
-## API route & controllers
+## API routes & controllers
   ### /daily-entries
     ### Get all daily entries 
     ### Get daily entry by entry id
