@@ -20,20 +20,31 @@ using Microsoft.Extensions.Logging;
         public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll([FromQuery] string token, [FromQuery] string date, [FromQuery] string search)
         {
             if (!String.IsNullOrEmpty(token) && !String.IsNullOrEmpty(date) && String.IsNullOrEmpty(search)){
-                
-                var entries = await _dailyEntryRepository.GetByDateAndUserAsync(token, date);
-                return Ok(entries);
+                try {
+                    var entries = await _dailyEntryRepository.GetByDateAndUserAsync(token, date);
+                    return Ok(entries);
+                }
+                catch (Exception){
+                    return NotFound($"The user has no entries for this date {date}");
+                }
 
             } else if (!String.IsNullOrEmpty(token) && String.IsNullOrEmpty(date) && !String.IsNullOrEmpty(search)) {
-                
-                var entries = await _dailyEntryRepository.GetBySearchAndUserAsync(token, search);  
-                return Ok(entries);
+                try {
+                    var entries = await _dailyEntryRepository.GetBySearchAndUserAsync(token, search);  
+                    return Ok(entries);
+                }
+                catch (Exception) {
+                    return NotFound("There are no entries that match this search");
+                }
             
             } else if ((!String.IsNullOrEmpty(token) && String.IsNullOrEmpty(date) && String.IsNullOrEmpty(search))){
-                
-                var entries = await _dailyEntryRepository.GetAllByUserAsync(token); 
-                return Ok(entries);
-            
+                try {
+                    var entries = await _dailyEntryRepository.GetAllByUserAsync(token); 
+                    return Ok(entries);
+                }
+                catch {
+                    return NotFound("There are no entries for this user");
+                }
             } else {
                 //var entries = await _dailyEntryRepository.GetAllAsync();
                 return NoContent();
