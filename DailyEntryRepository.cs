@@ -7,18 +7,19 @@ using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using Microsoft.Extensions.Configuration;
 
-public class DailyEntryService
-{
-    private readonly IMongoCollection<DailyEntry> _dailyEntries;
+
+public class DailyEntryRepository: IRepository<DailyEntry>
+{       
     IConfiguration _configuration;
-    public DailyEntryService(IConfiguration configuration)
-    {
-        _configuration = configuration;
-        
-        var client = new MongoClient(_configuration["DBCONNECTION"]);
-        var database = client.GetDatabase(_configuration["DBNAME"]);
-        _dailyEntries = database.GetCollection<DailyEntry>(_configuration["DBCOLLECTION"]);
-    }
+    private readonly IMongoDailyEntryDBContext _mongoContext;
+    private readonly IMongoCollection<DailyEntry> _dailyEntries;
+ 
+    public DailyEntryRepository(IMongoDailyEntryDBContext context, IConfiguration configuration)  
+        {  
+            _configuration = configuration;
+            _mongoContext = context;
+            _dailyEntries = _mongoContext.GetCollection<DailyEntry>(_configuration["DBCOLLECTION"]);
+        }  
 
     public async Task<List<DailyEntry>> GetAllAsync()
     {
@@ -36,9 +37,9 @@ public class DailyEntryService
         return await _dailyEntries.Find<DailyEntry>(entry => entry.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<List<DailyEntry>> GetByDateAndUserAsync(string token, string date)
+    public async Task<DailyEntry> GetByDateAndUserAsync(string token, string date)
     {
-        return await _dailyEntries.Find<DailyEntry>(entry => entry.Date == date && entry.Token == token).ToListAsync();
+        return await _dailyEntries.Find<DailyEntry>(entry => entry.Date == date && entry.Token == token).FirstOrDefaultAsync();
     }
 
     public async Task<List<DailyEntry>> GetBySearchAndUserAsync(string token, string search)
