@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
     [Route("daily-entries")]
     public class DailyEntryController : ControllerBase
     {
-        private readonly DailyEntryService _dailyEntryService;
-        public DailyEntryController(DailyEntryService service)
+        private readonly IRepository<DailyEntry> _dailyEntryRepository;
+        public DailyEntryController(IRepository<DailyEntry> dailyEntryRepository)
         {
-            _dailyEntryService = service;
+            _dailyEntryRepository = dailyEntryRepository;
         }
 
 
@@ -20,22 +20,33 @@ using Microsoft.Extensions.Logging;
         public async Task<ActionResult<IEnumerable<DailyEntry>>> GetAll([FromQuery] string token, [FromQuery] string date, [FromQuery] string search)
         {
             if (!String.IsNullOrEmpty(token) && !String.IsNullOrEmpty(date) && String.IsNullOrEmpty(search)){
-                
-                var entries = await _dailyEntryService.GetByDateAndUserAsync(token, date);
-                return Ok(entries);
+                try {
+                    var entries = await _dailyEntryRepository.GetByDateAndUserAsync(token, date);
+                    return Ok(entries);
+                }
+                catch (Exception){
+                    return NotFound($"The user has no entries for this date {date}");
+                }
 
             } else if (!String.IsNullOrEmpty(token) && String.IsNullOrEmpty(date) && !String.IsNullOrEmpty(search)) {
-                
-                var entries = await _dailyEntryService.GetBySearchAndUserAsync(token, search);  
-                return Ok(entries);
+                try {
+                    var entries = await _dailyEntryRepository.GetBySearchAndUserAsync(token, search);  
+                    return Ok(entries);
+                }
+                catch (Exception) {
+                    return NotFound("There are no entries that match this search");
+                }
             
             } else if ((!String.IsNullOrEmpty(token) && String.IsNullOrEmpty(date) && String.IsNullOrEmpty(search))){
-                
-                var entries = await _dailyEntryService.GetAllByUserAsync(token); 
-                return Ok(entries);
-            
+                try {
+                    var entries = await _dailyEntryRepository.GetAllByUserAsync(token); 
+                    return Ok(entries);
+                }
+                catch {
+                    return NotFound("There are no entries for this user");
+                }
             } else {
-                //var entries = await _dailyEntryService.GetAllAsync();
+                //var entries = await _dailyEntryRepository.GetAllAsync();
                 return NoContent();
             }
         }
@@ -44,7 +55,7 @@ using Microsoft.Extensions.Logging;
 
         public async Task<ActionResult<DailyEntry>> GetById(string id)
         {
-            var entry = await _dailyEntryService.GetByIdAsync(id);
+            var entry = await _dailyEntryRepository.GetByIdAsync(id);
             if (entry == null)
             {
                 return NotFound();
@@ -53,33 +64,33 @@ using Microsoft.Extensions.Logging;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(DailyEntry dailyEntry)
+        public async Task<IActionResult> Insert(DailyEntry dailyEntry)
         {
-            await _dailyEntryService.CreateAsync(dailyEntry);
+            await _dailyEntryRepository.InsertAsync(dailyEntry);
             return Ok(dailyEntry);
         }
         
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, DailyEntry updatedDailyEntry)
         {
-            var queriedDailyEntry = await _dailyEntryService.GetByIdAsync(id);
+            var queriedDailyEntry = await _dailyEntryRepository.GetByIdAsync(id);
             if(queriedDailyEntry == null)
             {
                 return NotFound();
             }
-            await _dailyEntryService.UpdateAsync(id, updatedDailyEntry);
+            await _dailyEntryRepository.UpdateAsync(id, updatedDailyEntry);
             return NoContent();
         }
         
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var dailyEntry = await _dailyEntryService.GetByIdAsync(id);
+            var dailyEntry = await _dailyEntryRepository.GetByIdAsync(id);
             if (dailyEntry == null)
             {
                 return NotFound();
             }
-            await _dailyEntryService.DeleteAsync(id);
+            await _dailyEntryRepository.DeleteAsync(id);
             return NoContent();
         }
     }
