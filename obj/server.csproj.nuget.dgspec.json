@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\server\\server.csproj": {}
+    "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\soc-lessons-tracker-backend\\server.csproj": {}
   },
   "projects": {
-    "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\server\\server.csproj": {
+    "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\soc-lessons-tracker-backend\\server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\server\\server.csproj",
+        "projectUniqueName": "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\soc-lessons-tracker-backend\\server.csproj",
         "projectName": "server",
-        "projectPath": "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\server\\server.csproj",
+        "projectPath": "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\soc-lessons-tracker-backend\\server.csproj",
         "packagesPath": "C:\\Users\\oana_\\.nuget\\packages\\",
-        "outputPath": "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\server\\obj\\",
+        "outputPath": "D:\\github.com\\OanaMG\\Personal Projects\\SoC Journal\\soc-lessons-tracker-backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\oana_\\AppData\\Roaming\\NuGet\\NuGet.Config"
